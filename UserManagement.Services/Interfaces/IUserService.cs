@@ -26,6 +26,12 @@ public interface IUserService
     IEnumerable<User> FilterByActive(bool isActive);
 
     /// <summary>
+    /// Creates new user
+    /// </summary>
+    /// <param name="user">User to create</param>
+    void Create(User user);
+
+    /// <summary>
     /// Updates existing user
     /// </summary>
     /// <param name="user">User to update</param>

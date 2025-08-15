@@ -27,21 +27,49 @@ public class UserControllerTests
     }
 
     [Fact]
-    public void Filter_WhenCalled_ModelMustContainFilteredUsers()
+    public void Create_Get_ReturnsView()
     {
-        // Arrange: Create controller and setup active users
         var controller = CreateController();
-        var users = SetupUsers(isActive: true);
-        _userService.Setup(s => s.FilterByActive(true)).Returns(users);
 
-        // Act: Call the Filter action
-        var result = controller.Filter(true);
+        // Act
+        var result = controller.Create();
 
-        // Assert: The view should be "List" and the model should contain the filtered users
-        result.ViewName.Should().Be("List");
-        result.Model
-            .Should().BeOfType<UserListViewModel>()
-            .Which.Items.Should().BeEquivalentTo(users);
+        // Assert: Simply returns the Create view
+        result.Should().BeOfType<ViewResult>();
+    }
+
+    [Fact]
+    public void Create_Post_WhenModelIsValid_CallsCreateAndRedirects()
+    {
+        var controller = CreateController();
+        var user = SetupUsers().First();
+
+        var result = controller.Create(user) as RedirectToActionResult;
+
+        _userService.Verify(s => s.Create(user), Times.Once);
+        result!.ActionName.Should().Be("List");
+    }
+
+    [Fact]
+    public void Create_Post_WhenModelIsNull_ReturnsErrorView()
+    {
+        var controller = CreateController();
+
+        var result = controller.Create(null);
+
+        result.Should().BeOfType<ViewResult>().Which.ViewName.Should().Be("Error");
+    }
+
+    [Fact]
+    public void List_WithOptionalFilterParameter_CallsGetAll()
+    {
+        var controller = CreateController();
+        SetupUsers();
+
+        var result = controller.List(filter: true);
+
+        _userService.Verify(s => s.GetAll(), Times.Once);
+        result.Model.Should().BeOfType<UserListViewModel>();
     }
 
     [Fact]

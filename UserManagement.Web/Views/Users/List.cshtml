@@ -1,6 +1,10 @@
 ﻿@model UserManagement.Web.Models.Users.UserListViewModel
 
-<h2>User List</h2>
+@{
+    ViewBag.Title = "User List";
+}
+
+<h2>@ViewData["Title"]</h2>
 
 <div class="table-responsive">
     <table class="table table-striped">
@@ -58,11 +62,11 @@
 <div>
     <div class="btn-group" role="group">
         <a asp-controller="Users" asp-action="List" class="btn btn-default">Show All</a>
-        <a asp-controller="Users" asp-action="Filter" asp-route-active="true" class="btn btn-default">Active Only</a>
-        <a asp-controller="Users" asp-action="Filter" asp-route-active="false" class="btn btn-default">Non Active</a>
+        <a asp-controller="Users" asp-action="List" asp-route-filter="true" class="btn btn-default">Active Only</a>
+        <a asp-controller="Users" asp-action="List" asp-route-filter="false" class="btn btn-default">Non Active</a>
     </div>
 
-    <a asp-controller="Users" asp-action="Add" class="btn btn-primary float-end">
+    <a asp-controller="Users" asp-action="Create" class="btn btn-primary float-end">
         Add User
     </a>
 </div>

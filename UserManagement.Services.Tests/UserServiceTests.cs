@@ -50,6 +50,27 @@ public class UserServiceTests
     }
 
     [Fact]
+    public void Create_WhenCalled_MustCallDataContextCreate()
+    {
+        // Arrange: Initializes the service and sets up mock users.
+        var service = CreateService();
+        var user = new User
+        {
+            Forename = "Bob",
+            Surname = "Davies",
+            Email = "bdavies@example.com",
+            DateOfBirth = new DateOnly(1976, 11, 12),
+            IsActive = true
+        };
+
+        // Act: Calls the method under test to update the user.
+        service.Create(user);
+
+        // Assert: Verifies that the data context's Update method was called once with the correct user.
+        _dataContext.Verify(d => d.Create(user), Times.Once);
+    }
+
+    [Fact]
     public void Update_WhenCalled_MustCallDataContextUpdate()
     {
         // Arrange: Initializes the service and sets up mock users.

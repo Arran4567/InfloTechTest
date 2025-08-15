@@ -19,6 +19,7 @@ public class UserService : IUserService
     public User? GetById(long id) => _dataAccess.Find<User>(id);
     public IEnumerable<User> GetAll() => _dataAccess.GetAll<User>();
     public IEnumerable<User> FilterByActive(bool isActive) => _dataAccess.GetAll<User>().Where(x => x.IsActive == isActive);
+    public void Create(User user) => _dataAccess.Create(user);
     public void Update(User user) => _dataAccess.Update(user);
     public void Delete(User user) => _dataAccess.Delete(user);
 }

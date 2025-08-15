@@ -1,8 +1,9 @@
 ﻿@model UserManagement.Web.Models.Users.UserListItemViewModel
 
 @{
-    ViewData["ReadOnly"] = true;
+    ViewBag.Title = "User Detail";
 }
 
-<h2>User Details</h2>
+<h2>@ViewData["Title"]</h2>
+
 <partial name="partials/_fields" />

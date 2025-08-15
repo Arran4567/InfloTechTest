@@ -12,22 +12,20 @@ public class UsersController : Controller
     public UsersController(IUserService userService) => _userService = userService;
 
     [HttpGet("")]
-    [HttpGet("List")]
+    [HttpGet("list")]
     public ViewResult List(bool? filter = null)
     {
-        var users = _userService.GetAll();
+
+        var users = filter.HasValue ? _userService.FilterByActive(filter.Value) : _userService.GetAll();
         var model = UserListToViewModel(users);
 
         return View(model);
     }
 
-    [HttpGet("filter/{active:bool}")]
-    public ViewResult Filter(bool active)
+    [HttpGet("create")]
+    public ViewResult Create()
     {
-        var users = _userService.FilterByActive(active);
-        var model = UserListToViewModel(users);
-
-        return View("List", model);
+        return View();
     }
 
     [HttpGet("detail/{id:long}")]
@@ -69,6 +67,18 @@ public class UsersController : Controller
         }
 
         _userService.Delete(entityToDelete);
+        return RedirectToAction("List");
+    }
+
+    [HttpPost("Create")]
+    public IActionResult Create(User? model)
+    {
+        if (model == null)
+        {
+            return View("Error");
+        }
+
+        _userService.Create(model);
         return RedirectToAction("List");
     }
 
