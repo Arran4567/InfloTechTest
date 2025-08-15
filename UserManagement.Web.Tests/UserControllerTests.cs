@@ -128,7 +128,7 @@ public class UserControllerTests
         var controller = CreateController();
 
         // Act: Call the POST Edit action with an empty User (simulates null model scenario)
-        var result = controller.Edit(new User());
+        var result = controller.Edit(null);
 
         // Assert: The view returned should be "Error"
         result.Should().BeOfType<ViewResult>().Which.ViewName.Should().Be("Error");

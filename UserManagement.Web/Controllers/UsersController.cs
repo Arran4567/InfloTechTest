@@ -73,9 +73,9 @@ public class UsersController : Controller
     }
 
     [HttpPost("edit/{id:long}")]
-    public IActionResult Edit(User model)
+    public IActionResult Edit(User? model)
     {
-        if (model == null || _userService.GetById(model.Id) == null)
+        if (model == null)
         {
             return View("Error");
         }
