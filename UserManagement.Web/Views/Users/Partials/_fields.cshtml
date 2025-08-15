@@ -1,0 +1,43 @@
+﻿@model UserManagement.Web.Models.Users.UserListItemViewModel
+
+@{
+    var readonlyMode = ViewData["ReadOnly"] as bool? ?? false;
+}
+
+<fieldset class="border p-3 mb-4 rounded">
+    <legend class="fw-bold">Personal Information</legend>
+
+    <div class="mb-3">
+        <label asp-for="Forename" class="form-label"></label>
+        <input asp-for="Forename" class="form-control" readonly="@(readonlyMode ? "readonly" : null)" />
+        <span asp-validation-for="Forename" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Surname" class="form-label"></label>
+        <input asp-for="Surname" class="form-control" readonly="@(readonlyMode ? "readonly" : null)" />
+        <span asp-validation-for="Surname" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="DateOfBirth" class="form-label"></label>
+        <input type="date" asp-for="DateOfBirth" class="form-control" readonly="@(readonlyMode ? "readonly" : null)" />
+        <span asp-validation-for="DateOfBirth" class="text-danger"></span>
+    </div>
+</fieldset>
+
+<fieldset class="border p-3 mb-4 rounded">
+    <legend class="fw-bold">Account Details</legend>
+
+    <div class="mb-3">
+        <label asp-for="Email" class="form-label"></label>
+        <input type="email" asp-for="Email" class="form-control" readonly="@(readonlyMode ? "readonly" : null)" />
+        <span asp-validation-for="Email" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3 form-check">
+        <label asp-for="IsActive" class="form-check-label"></label>
+        <input asp-for="IsActive" class="form-check-input" disabled="@(readonlyMode ? "disabled" : null)" />
+        <span asp-validation-for="IsActive" class="text-danger"></span>
+    </div>
+</fieldset>

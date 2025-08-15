@@ -1,11 +1,26 @@
 using System.Linq;
-using FluentAssertions;
 using UserManagement.Models;
 
 namespace UserManagement.Data.Tests;
 
 public class DataContextTests
 {
+    [Fact]
+    public void Find_MustFindCorrectEntity()
+    {
+        // Arrange: Initializes objects and sets the value of the data that is passed to the method under test.
+        var context = CreateContext();
+
+
+        var entity = context.GetAll<User>().First();
+
+        // Act: Invokes the method under test with the arranged parameters.
+        var result = context.Find<User>(entity.Id);
+
+        // Assert: Verifies that the action of the method under test behaves as expected.
+        result.Should().BeEquivalentTo(entity);
+    }
+
     [Fact]
     public void GetAll_WhenNewEntityAdded_MustIncludeNewEntity()
     {
@@ -27,6 +42,21 @@ public class DataContextTests
         result
             .Should().Contain(s => s.Email == entity.Email)
             .Which.Should().BeEquivalentTo(entity);
+    }
+
+    [Fact]
+    public void GetAll_WhenEntityUpdated_IncludesUpdatedEntity()
+    {
+        // Arrange
+        var context = CreateContext();
+        var entity = context.GetAll<User>().First(); // tracked entity
+        entity.Forename = "Test";
+
+        // Act
+        var result = context.GetAll<User>();
+
+        // Assert
+        result.Should().ContainSingle(u => u.Id == entity.Id && u.Forename == "Test");
     }
 
     [Fact]
