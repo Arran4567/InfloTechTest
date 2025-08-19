@@ -25,6 +25,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UserManagement.Services.Tes
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UserManagement.Web.Tests", "UserManagement.Web.Tests\UserManagement.Web.Tests.csproj", "{C0F78DDD-C753-432C-8E1B-F88A2DB459FD}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UserManagement.Api", "UserManagement.Api\UserManagement.Api.csproj", "{9ACDBB4F-485B-4111-B987-6ED9268472BB}"
+	ProjectSection(ProjectDependencies) = postProject
+		{37ACAAC0-61D6-4C3E-87B5-41E740B5D29C} = {37ACAAC0-61D6-4C3E-87B5-41E740B5D29C}
+		{642A3FD1-D215-4675-824E-43816445588F} = {642A3FD1-D215-4675-824E-43816445588F}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -55,6 +61,10 @@ Global
 		{C0F78DDD-C753-432C-8E1B-F88A2DB459FD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C0F78DDD-C753-432C-8E1B-F88A2DB459FD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C0F78DDD-C753-432C-8E1B-F88A2DB459FD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9ACDBB4F-485B-4111-B987-6ED9268472BB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9ACDBB4F-485B-4111-B987-6ED9268472BB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9ACDBB4F-485B-4111-B987-6ED9268472BB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9ACDBB4F-485B-4111-B987-6ED9268472BB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
