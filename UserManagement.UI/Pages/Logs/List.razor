@@ -1,0 +1,68 @@
+@page "/logs"
+@using UserManagement.UI.Models
+@inject HttpClient Http
+
+@if (logs is null)
+{
+    <p>Loading...</p>
+}
+else if (logs.Count == 0)
+{
+    <p>No logs found.</p>
+}
+else
+{
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Description</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in logs)
+                {
+                    <tr>
+                        <td>
+                            <a href="@($"/logs/detail/{item.Id}")">@item.Id</a>
+                        </td>
+                        <td>@item.Description</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+
+<div class="btn-group mb-3">
+    <button class="btn btn-default" @onclick="() => SetFilter(null)">Show All</button>
+    <button class="btn btn-default" @onclick="() => SetFilter((int)Enums.LogType.Create)">Show Created</button>
+    <button class="btn btn-default" @onclick="() => SetFilter((int)Enums.LogType.View)">Show Viewed</button>
+    <button class="btn btn-default" @onclick="() => SetFilter((int)Enums.LogType.Update)">Show Updated</button>
+    <button class="btn btn-default" @onclick="() => SetFilter((int)Enums.LogType.Delete)">Show Deleted</button>
+</div>
+
+@code {
+    [CascadingParameter] public MainLayout Layout { get; set; } = default!;
+    private List<Log>? logs;
+    private int? selectedType;
+
+    protected override async Task OnInitializedAsync()
+    {
+        Layout.PageHeader = "Logs";
+        await LoadData();
+    }
+
+    private async Task LoadData()
+    {
+        var url = selectedType.HasValue ? $"/api/logs?filter={selectedType.Value}" : "/api/logs";
+        logs = await Http.GetFromJsonAsync<List<Log>>(url);
+    }
+
+    private async Task SetFilter(int? filter)
+    {
+        selectedType = filter;
+        await LoadData();
+    }
+}

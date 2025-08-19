@@ -1,0 +1,61 @@
+@page "/users/{id:long}"
+@inject HttpClient Http
+@using UserManagement.UI.Models
+@using UserManagement.UI.Pages.Users.Partials
+
+@if (user is null)
+{
+    <p>Loading...</p>
+}
+else
+{
+    <Fields User="user" Readonly="true" />
+
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Type</th>
+                    <th>Description</th>
+                    <th>DateTime</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in user.Logs)
+                {
+                    <tr>
+                        <td>
+                            @item.Id
+                        </td>
+                        <td>
+                            @item.Type.ToString()
+                        </td>
+                        <td>
+                            @item.Description
+                        </td>
+                        <td>
+                            @item.DateTime
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+
+@code {
+    [CascadingParameter] public MainLayout Layout { get; set; } = default!;
+    [Parameter] public long id { get; set; }
+    private User? user;
+
+    protected override void OnInitialized()
+    {
+        Layout.PageHeader = "User Detail";
+    }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        user = await Http.GetFromJsonAsync<User>($"/api/users/detail/{id}");
+    }
+}

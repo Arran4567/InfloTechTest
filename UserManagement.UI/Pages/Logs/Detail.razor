@@ -1,0 +1,43 @@
+@page "/logs/detail/{id:long}"
+@using UserManagement.UI.Models
+@inject HttpClient Http
+
+@if (log is null)
+{
+    <p>Loading...</p>
+}
+else
+{
+    <div class="mb-3">
+        <label>Type</label>
+        <input class="form-control" value="@log.Type" readonly />
+    </div>
+
+    <div class="mb-3">
+        <label>Description</label>
+        <input class="form-control" value="@log.Description" readonly />
+    </div>
+
+    <div class="mb-3">
+        <label>DateTime</label>
+        <input class="form-control" value="@log.DateTime" readonly />
+    </div>
+}
+
+@code {
+    [CascadingParameter] public MainLayout Layout { get; set; } = default!;
+    [Parameter] public long id { get; set; }
+    private Log? log;
+
+    protected override void OnInitialized()
+    {
+        Layout.PageHeader = "Log Detail";
+    }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        log = await Http.GetFromJsonAsync<Log>($"/api/logs/detail?id={id}");
+    }
+}
+
+

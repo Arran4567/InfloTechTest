@@ -1,0 +1,108 @@
+@page "/users"
+@using UserManagement.UI.Models
+@inject HttpClient Http
+
+@if (users is null)
+{
+    <p>Loading...</p>
+}
+else if (users.Count == 0)
+{
+    <p>No users found.</p>
+}
+else
+{
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Forename</th>
+                    <th>Surname</th>
+                    <th>Email</th>
+                    <th>Date Of Birth</th>
+                    <th>Active</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in users)
+                {
+                    <tr>
+                        <td>
+                            @item.Id
+                        </td>
+                        <td>
+                            @item.Forename
+                        </td>
+                        <td>
+                            @item.Surname
+                        </td>
+                        <td>
+                            @item.Email
+                        </td>
+                        <td>
+                            @item.DateOfBirth
+                        </td>
+                        <td>
+                            @(item.IsActive ? "Yes" : "No")
+                        </td>
+                        <td>
+                            <div class="dropdown">
+                                <button class="btn btn-default dropdown-toggle"
+                                        type="button"
+                                        data-bs-toggle="dropdown"
+                                        aria-expanded="false"
+                                        id="btnToggleActions@item.Id">
+                                    Actions
+                                </button>
+                                <ul class="dropdown-menu" aria-labelledby="btnToggleActions@item.Id">
+                                    <li><a class="dropdown-item" href="/users/@item.Id">View</a></li>
+                                    <li><a class="dropdown-item" href="/users/edit/@item.Id">Edit</a></li>
+                                    <li><a class="dropdown-item" @onclick="() => Delete(item.Id)">Delete</a></li>
+                                </ul>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+<div class="btn-group">
+    <button class="btn btn-default" @onclick="() => SetFilter(null)">Show All</button>
+    <button class="btn btn-default" @onclick="() => SetFilter(true)">Show Active</button>
+    <button class="btn btn-default" @onclick="() => SetFilter(false)">Show Inactive</button>
+</div>
+<a class="btn btn-primary float-end" href="/users/create">Create User</a>
+
+@code {
+    [CascadingParameter] public MainLayout Layout { get; set; } = default!;
+    private List<User>? users;
+    private bool? filter;
+
+    protected override async Task OnInitializedAsync() {
+        Layout.PageHeader = "Users";
+        await Load();
+    }
+    private async Task Load()
+    {
+        var url = filter.HasValue ? $"/api/users?filter={filter}" : "/api/users";
+        users = await Http.GetFromJsonAsync<List<User>>(url);
+    }
+
+    private async Task SetFilter(bool? e)
+    {
+        filter = e;
+        await Load();
+    }
+
+    private async Task Delete(long id)
+    {
+        var resp = await Http.DeleteAsync($"/api/users/delete/{id}");
+        if (resp.IsSuccessStatusCode)
+        {
+            await Load();
+        }
+    }
+}

@@ -1,0 +1,48 @@
+@page "/users/edit/{id:long}"
+@inject HttpClient Http
+@inject NavigationManager Navigation
+@using UserManagement.UI.Models
+@using UserManagement.UI.Pages.Users.Partials
+
+@if (model is null)
+{
+    <p>Loading...</p>
+}
+else
+{
+    <EditForm Model="model" OnValidSubmit="HandleValidSubmit">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+
+        <Fields User="model" Readonly="false" />
+
+        <button class="btn btn-primary" type="submit">Submit</button>
+    </EditForm>
+}
+
+@code {
+    [CascadingParameter] public MainLayout Layout { get; set; } = default!;
+    [Parameter] public long id { get; set; }
+    private User? model;
+
+    protected override void OnInitialized()
+    {
+        Layout.PageHeader = "Edit User";
+    }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        model = await Http.GetFromJsonAsync<User>($"/api/users/detail/{id}");
+    }
+
+    private async Task HandleValidSubmit()
+    {
+        var resp = await Http.PutAsJsonAsync("/api/users/edit", model);
+        if (resp.IsSuccessStatusCode)
+        {
+            Navigation.NavigateTo("/users");
+        }
+    }
+}
+
+

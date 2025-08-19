@@ -1,0 +1,36 @@
+﻿@inherits LayoutComponentBase
+
+<CascadingValue Value="this">
+    <div class="page">
+        <div class="sidebar">
+            <NavMenu />
+        </div>
+        <PageTitle>@PageHeader - User Management</PageTitle>
+        <main>
+            <div class="top-row px-4">
+                <h1>@PageHeader</h1>
+            </div>
+
+            <article class="content px-4">
+                @Body
+            </article>
+        </main>
+    </div>
+</CascadingValue>
+
+@code {
+    private string _pageHeader = "Home";
+
+    public string PageHeader
+    {
+        get => _pageHeader;
+        set
+        {
+            if (_pageHeader != value)
+            {
+                _pageHeader = value;
+                StateHasChanged(); // <-- force re-render immediately
+            }
+        }
+    }
+}

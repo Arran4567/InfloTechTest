@@ -1,0 +1,40 @@
+﻿@using UserManagement.UI.Models
+
+<fieldset class="border p-3 mb-4 rounded">
+    <legend class="fw-bold">Personal Information</legend>
+
+    <div class="mb-3">
+        <label class="form-label">Forename</label>
+        <input class="form-control" @bind="User.Forename" readonly="@Readonly" />
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Surname</label>
+        <input class="form-control" @bind="User.Surname" readonly="@Readonly" />
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Date of Birth</label>
+        <input type="date" class="form-control" @bind="User.DateOfBirth" readonly="@Readonly" />
+    </div>
+</fieldset>
+
+<fieldset class="border p-3 mb-4 rounded">
+    <legend class="fw-bold">Account Details</legend>
+
+    <div class="mb-3">
+        <label class="form-label">Email</label>
+        <input type="email" class="form-control" @bind="User.Email" readonly="@Readonly" />
+    </div>
+
+    <div class="mb-3 form-check">
+        <input type="checkbox" class="form-check-input" @bind="User.IsActive" disabled="@Readonly" />
+        <label class="form-check-label">Active</label>
+    </div>
+</fieldset>
+
+@code {
+    [CascadingParameter] public MainLayout Layout { get; set; } = default!;
+    [Parameter] public User User { get; set; } = new();
+    [Parameter] public bool Readonly { get; set; } = false;
+}

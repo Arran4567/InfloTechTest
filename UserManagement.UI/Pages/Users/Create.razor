@@ -1,0 +1,36 @@
+@page "/users/create"
+@inject HttpClient Http
+@inject NavigationManager Navigation
+@using UserManagement.UI.Models
+@using UserManagement.UI.Pages.Users.Partials
+
+<EditForm Model="model" OnValidSubmit="HandleValidSubmit">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <Fields User="model" Readonly="false" />
+
+    <button class="btn btn-primary" type="submit">Submit</button>
+</EditForm>
+
+@code {
+    [CascadingParameter] public MainLayout Layout { get; set; } = default!;
+    private User model = new();
+
+    protected override void OnInitialized()
+    {
+        Layout.PageHeader = "Create User";
+    }
+
+    private async Task HandleValidSubmit()
+    {
+        var resp = await Http.PostAsJsonAsync("/api/users/Create", model);
+        if (resp.IsSuccessStatusCode)
+        {
+            // navigate back to users
+            Navigation.NavigateTo("/users");
+        }
+    }
+}
+
+

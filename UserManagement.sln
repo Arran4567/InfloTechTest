@@ -31,6 +31,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UserManagement.Api", "UserM
 		{642A3FD1-D215-4675-824E-43816445588F} = {642A3FD1-D215-4675-824E-43816445588F}
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UserManagement.UI", "UserManagement.UI\UserManagement.UI.csproj", "{1A6CD8A2-84FB-4FC7-984A-AFA3CC8B0EA9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -65,6 +67,10 @@ Global
 		{9ACDBB4F-485B-4111-B987-6ED9268472BB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9ACDBB4F-485B-4111-B987-6ED9268472BB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9ACDBB4F-485B-4111-B987-6ED9268472BB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1A6CD8A2-84FB-4FC7-984A-AFA3CC8B0EA9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1A6CD8A2-84FB-4FC7-984A-AFA3CC8B0EA9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1A6CD8A2-84FB-4FC7-984A-AFA3CC8B0EA9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1A6CD8A2-84FB-4FC7-984A-AFA3CC8B0EA9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
