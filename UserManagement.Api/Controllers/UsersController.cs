@@ -3,7 +3,7 @@ using UserManagement.Data.Enums;
 using UserManagement.Models;
 using UserManagement.Services.Domain.Interfaces;
 
-namespace UserManagement.WebMS.Controllers;
+namespace UserManagement.Api.Controllers;
 
 [Route("api/users")]
 [ApiController]

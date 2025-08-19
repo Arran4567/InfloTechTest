@@ -2,7 +2,7 @@
 using UserManagement.Data.Enums;
     using UserManagement.Services.Domain.Interfaces;
 
-    namespace UserManagement.WebMS.Controllers;
+    namespace UserManagement.Api.Controllers;
 
     [Route("api/logs")]
     [ApiController]
