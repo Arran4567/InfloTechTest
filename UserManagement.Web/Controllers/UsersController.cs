@@ -1,6 +1,8 @@
 ﻿using System.Linq;
+using UserManagement.Data.Enums;
 using UserManagement.Models;
 using UserManagement.Services.Domain.Interfaces;
+using UserManagement.Web.Models.Logs;
 using UserManagement.Web.Models.Users;
 
 namespace UserManagement.WebMS.Controllers;
@@ -11,11 +13,14 @@ public class UsersController : Controller
     private readonly IUserService _userService;
     public UsersController(IUserService userService) => _userService = userService;
 
+    #region Public Methods
+
+    #region HttpGet
+
     [HttpGet("")]
     [HttpGet("list")]
     public ViewResult List(bool? filter = null)
     {
-
         var users = filter.HasValue ? _userService.FilterByActive(filter.Value) : _userService.GetAll();
         var model = UserListToViewModel(users);
 
@@ -38,6 +43,7 @@ public class UsersController : Controller
             return View("Error");
         }
 
+        _userService.AddLog(ref user, LogType.View);
         var model = UserToViewModel(user);
         return View(model);
     }
@@ -66,9 +72,14 @@ public class UsersController : Controller
             return View("Error");
         }
 
+        _userService.AddLog(ref entityToDelete, LogType.Delete);
         _userService.Delete(entityToDelete);
         return RedirectToAction("List");
     }
+
+    #endregion
+
+    #region HttpPost
 
     [HttpPost("Create")]
     public IActionResult Create(User? model)
@@ -79,6 +90,7 @@ public class UsersController : Controller
         }
 
         _userService.Create(model);
+        _userService.AddLog(ref model, LogType.Create);
         return RedirectToAction("List");
     }
 
@@ -91,25 +103,19 @@ public class UsersController : Controller
         }
 
         _userService.Update(model);
+        _userService.AddLog(ref model, LogType.Update);
         return RedirectToAction("List");
     }
+    #endregion
+
+    #endregion
+
+    #region Private Methods
 
     private UserListViewModel UserListToViewModel(IEnumerable<User> users)
     {
-        var items = users.Select(p => new UserListItemViewModel
-        {
-            Id = p.Id,
-            Forename = p.Forename,
-            Surname = p.Surname,
-            Email = p.Email,
-            DateOfBirth = p.DateOfBirth,
-            IsActive = p.IsActive
-        });
-
-        return new UserListViewModel
-        {
-            Items = items.ToList()
-        };
+        var items = users.Select(u => UserToViewModel(u)).ToList();
+        return new UserListViewModel { Items = items };
     }
 
     private UserListItemViewModel UserToViewModel(User user)
@@ -121,7 +127,22 @@ public class UsersController : Controller
             Surname = user.Surname,
             Email = user.Email,
             DateOfBirth = user.DateOfBirth,
-            IsActive = user.IsActive
+            IsActive = user.IsActive,
+            Logs = MapLogs(user.Logs)
         };
     }
+
+    private LogListViewModel MapLogs(IEnumerable<Log> logs) =>
+    new LogListViewModel
+    {
+        Items = logs.Select(l => new LogListItemViewModel
+        {
+            Id = l.Id,
+            Type = l.Type,
+            Description = l.Description,
+            DateTime = l.DateTime
+        }).ToList()
+    };
+
+    #endregion
 }

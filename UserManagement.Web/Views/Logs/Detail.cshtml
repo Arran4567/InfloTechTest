@@ -1,0 +1,22 @@
+﻿@model UserManagement.Web.Models.Logs.LogListItemViewModel
+
+@{
+    ViewBag.Title = "Log Detail";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<div class="mb-3">
+    <label asp-for="Type" class="form-label"></label>
+    <input asp-for="Type" class="form-control" readonly />
+</div>
+
+<div class="mb-3">
+    <label asp-for="Description" class="form-label"></label>
+    <input asp-for="Description" class="form-control" readonly />
+</div>
+
+<div class="mb-3">
+    <label asp-for="DateTime" class="form-label"></label>
+    <input asp-for="DateTime" class="form-control" readonly />
+</div>

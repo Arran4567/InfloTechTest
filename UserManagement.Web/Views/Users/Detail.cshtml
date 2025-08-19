@@ -7,3 +7,36 @@
 <h2>@ViewData["Title"]</h2>
 
 <partial name="partials/_fields" />
+
+<h2>Logs</h2>
+<div class="table-responsive">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Type</th>
+                <th>Description</th>
+                <th>DateTime</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Logs.Items)
+            {
+                <tr>
+                    <td>
+                        @item.Id
+                    </td>
+                    <td>
+                        @item.Type.ToString()
+                    </td>
+                    <td>
+                        @item.Description
+                    </td>
+                    <td>
+                        @item.DateTime
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

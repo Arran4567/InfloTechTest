@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using UserManagement.Web.Models.Logs;
 
 namespace UserManagement.Web.Models.Users;
 
@@ -17,4 +18,5 @@ public class UserListItemViewModel
     public string? Email { get; set; }
     public bool IsActive { get; set; }
     public DateOnly DateOfBirth { get; set; }
+    public LogListViewModel Logs { get; set; } = default!;
 }

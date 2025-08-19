@@ -23,7 +23,8 @@ public class UserControllerTests
         // Assert: The model should be of type UserListViewModel and contain the expected users
         result.Model
             .Should().BeOfType<UserListViewModel>()
-            .Which.Items.Should().BeEquivalentTo(users);
+            .Which.Items.Should().BeEquivalentTo(users, opts => opts
+                .Excluding(u => u.Logs));
     }
 
     [Fact]
@@ -68,7 +69,7 @@ public class UserControllerTests
 
         var result = controller.List(filter: true);
 
-        _userService.Verify(s => s.GetAll(), Times.Once);
+        _userService.Verify(s => s.FilterByActive(true), Times.Once);
         result.Model.Should().BeOfType<UserListViewModel>();
     }
 

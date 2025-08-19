@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -13,4 +14,5 @@ public class User
     public string Email { get; set; } = default!;
     public bool IsActive { get; set; }
     public DateOnly DateOfBirth { get; set; } = default!;
+    public virtual ICollection<Log> Logs { get; set; } = new List<Log>();
 }

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using UserManagement.Data.Enums;
 using UserManagement.Models;
 
 namespace UserManagement.Services.Domain.Interfaces;
@@ -42,4 +43,11 @@ public interface IUserService
     /// </summary>
     /// <param name="user">User to delete</param>
     void Delete(User user);
+
+    /// <summary>
+    /// Adds user log
+    /// </summary>
+    /// <param name="user">User to add log to</param>
+    /// <param name="type">Action performed on user</param>
+    void AddLog(ref User user, LogType type);
 }

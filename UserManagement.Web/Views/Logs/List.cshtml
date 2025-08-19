@@ -1,0 +1,41 @@
+﻿@model UserManagement.Web.Models.Logs.LogListViewModel
+
+@{
+    ViewBag.Title = "Log List";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<div class="table-responsive">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Description<th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Items)
+            {
+                <tr>
+                    <td>
+                        <a asp-controller="Logs" asp-action="Detail" asp-route-id="@item.Id">@item.Id</a>
+                    </td>
+                    <td>
+                        @item.Description
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<div>
+    <div class="btn-group" role="group">
+        <a asp-controller="Logs" asp-action="List" class="btn btn-default">Show All</a>
+        <a asp-controller="Logs" asp-action="List" asp-route-filter="@UserManagement.Data.Enums.LogType.Create" class="btn btn-default">Show Created</a>
+        <a asp-controller="Logs" asp-action="List" asp-route-filter="@UserManagement.Data.Enums.LogType.View" class="btn btn-default">Show Viewed</a>
+        <a asp-controller="Logs" asp-action="List" asp-route-filter="@UserManagement.Data.Enums.LogType.Update" class="btn btn-default">Show Updated</a>
+        <a asp-controller="Logs" asp-action="List" asp-route-filter="@UserManagement.Data.Enums.LogType.Delete" class="btn btn-default">Show Deleted</a>
+    </div>
+</div>
