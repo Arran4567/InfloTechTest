@@ -24,7 +24,7 @@
 
     private async Task HandleValidSubmit()
     {
-        var resp = await Http.PostAsJsonAsync("/api/users/Create", model);
+        var resp = await Http.PostAsJsonAsync("/api/users/Create", model!.ToListItemViewModel());
         if (resp.IsSuccessStatusCode)
         {
             // navigate back to users

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using UserManagement.Api.Controllers;
+using UserManagement.Api.Models.Users;
 using UserManagement.Models;
 using UserManagement.Services.Domain.Interfaces;
 
@@ -55,9 +56,9 @@ public class UserApiTests
     public void Detail_WhenUserDoesNotExist_ReturnsOkWithErrorMessage()
     {
         var controller = CreateController();
-        _userService.Setup(s => s.GetById(It.IsAny<long>())).Returns((User?)null);
+        _userService.Setup(s => s.GetById(It.IsAny<string>())).Returns((User?)null);
 
-        var result = controller.Detail(1) as OkObjectResult;
+        var result = controller.Detail("a") as OkObjectResult;
 
         result!.StatusCode.Should().Be(200);
         result.Value.Should().Be("User not found.");
@@ -67,12 +68,17 @@ public class UserApiTests
     public void Create_Post_WhenModelIsValid_CreatesUserAndReturnsOk()
     {
         var controller = CreateController();
-        var user = SetupUsers().First();
-
-        var result = controller.Create(user) as OkObjectResult;
-
-        _userService.Verify(s => s.Create(user), Times.Once);
-        result!.Value.Should().Be(user);
+        var user = new User
+        {
+            Forename = "Test",
+            Surname = "Test",
+            DateOfBirth = new DateTime(2000,01,01),
+            Email = "Test@Test.com",
+            IsActive = true
+        };
+        var result = controller.Create(UserToViewModel(user)) as OkObjectResult;
+        _userService.Verify(s => s.Create(It.IsAny<User>()), Times.Once);
+        result!.Value.Should().BeEquivalentTo(UserToViewModel(user), options => options.Excluding(x => x.Id).Excluding(x => x.Logs));
     }
 
     [Fact]
@@ -81,7 +87,7 @@ public class UserApiTests
         var controller = CreateController();
         controller.ModelState.AddModelError("Error", "Invalid model");
 
-        var result = controller.Create(new User());
+        var result = controller.Create(new UserListItemViewModel { Forename = "", Surname = ""});
 
         result.Should().BeOfType<BadRequestObjectResult>();
     }
@@ -92,7 +98,7 @@ public class UserApiTests
         var controller = CreateController();
         var user = SetupUsers().First();
 
-        var result = controller.Edit(user) as OkObjectResult;
+        var result = controller.Edit(UserToViewModel(user)) as OkObjectResult;
 
         _userService.Verify(s => s.Update(user), Times.Once);
         result!.Value.Should().Be(user);
@@ -104,7 +110,7 @@ public class UserApiTests
         var controller = CreateController();
         controller.ModelState.AddModelError("Error", "Invalid model");
 
-        var result = controller.Edit(new User());
+        var result = controller.Edit(new UserListItemViewModel { Forename = "", Surname = "" });
 
         result.Should().BeOfType<BadRequestObjectResult>();
     }
@@ -126,14 +132,14 @@ public class UserApiTests
     public void Delete_WhenUserDoesNotExist_ReturnsBadRequest()
     {
         var controller = CreateController();
-        _userService.Setup(s => s.GetById(It.IsAny<long>())).Returns((User?)null);
+        _userService.Setup(s => s.GetById(It.IsAny<string>())).Returns((User?)null);
 
-        var result = controller.Delete(1) as BadRequestObjectResult;
+        var result = controller.Delete("a") as BadRequestObjectResult;
 
         result!.Value.Should().Be("User not found.");
     }
 
-    private IQueryable<User> SetupUsers(long id = 1, string forename = "Johnny", string surname = "User", string email = "juser@example.com", DateOnly? dateOfBirth = null, bool isActive = true)
+    private IQueryable<User> SetupUsers(string id = "a", string forename = "Johnny", string surname = "User", string email = "juser@example.com", DateTime? dateOfBirth = null, bool isActive = true)
     {
         var users = new[]
         {
@@ -143,7 +149,7 @@ public class UserApiTests
                 Forename = forename,
                 Surname = surname,
                 Email = email,
-                DateOfBirth = dateOfBirth ?? new DateOnly(1972, 04, 15),
+                DateOfBirth = dateOfBirth ?? new DateTime(1972, 04, 15),
                 IsActive = isActive
             }
         }.AsQueryable();
@@ -157,4 +163,14 @@ public class UserApiTests
     }
     private readonly Mock<IUserService> _userService = new();
     private UsersController CreateController() => new(_userService.Object);
+
+    private UserListItemViewModel UserToViewModel(User user) => new UserListItemViewModel
+    {
+        Id = user.Id,
+        Forename = user.Forename,
+        Surname = user.Surname,
+        Email = user.Email,
+        DateOfBirth = user.DateOfBirth,
+        IsActive = user.IsActive,
+    };
 }

@@ -1,8 +1,7 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations;
-using UserManagement.Web.Models.Logs;
+﻿using System.ComponentModel.DataAnnotations;
+using UserManagement.Api.Models.Logs;
 
-namespace UserManagement.Web.Models.Users;
+namespace UserManagement.Api.Models.Users;
 
 public class UserListViewModel
 {
@@ -11,7 +10,7 @@ public class UserListViewModel
 
 public class UserListItemViewModel
 {
-    public string Id { get; set; } = default!;
+    public string? Id { get; set; }
     public required string Forename { get; set; }
     public required string Surname { get; set; }
     [EmailAddress]

@@ -14,7 +14,7 @@ public class UserService : IUserService
     private readonly IDataContext _dataAccess;
     public UserService(IDataContext dataAccess) => _dataAccess = dataAccess;
 
-    public User? GetById(long id)
+    public User? GetById(string id)
     {
         var user = _dataAccess.GetAll<User>()
             .Include(u => u.Logs)
@@ -56,7 +56,7 @@ public class UserService : IUserService
         _dataAccess.Update(user);
     }
 
-    public async Task<User?> GetByIdAsync(long id)
+    public async Task<User?> GetByIdAsync(string id)
     {
         var user = (await _dataAccess.GetAllAsync<User>())
             .Include(u => u.Logs)

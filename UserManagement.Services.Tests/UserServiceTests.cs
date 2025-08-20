@@ -61,7 +61,7 @@ public class UserServiceTests
             Forename = "Bob",
             Surname = "Davies",
             Email = "bdavies@example.com",
-            DateOfBirth = new DateOnly(1976, 11, 12),
+            DateOfBirth = new DateTime(1976, 11, 12),
             IsActive = true
         };
 
@@ -152,7 +152,7 @@ public class UserServiceTests
             Forename = "Bob",
             Surname = "Davies",
             Email = "bdavies@example.com",
-            DateOfBirth = new DateOnly(1976, 11, 12),
+            DateOfBirth = new DateTime(1976, 11, 12),
             IsActive = true
         };
 
@@ -191,7 +191,7 @@ public class UserServiceTests
         _dataContext.Verify(d => d.DeleteAsync(user), Times.Once);
     }
 
-    private IQueryable<User> SetupUsers(long id = 1, string forename = "Johnny", string surname = "User", string email = "juser@example.com", DateOnly? dateOfBirth = null, bool isActive = true)
+    private IQueryable<User> SetupUsers(string id = "a", string forename = "Johnny", string surname = "User", string email = "juser@example.com", DateTime? dateOfBirth = null, bool isActive = true)
     {
         var users = new[]
         {
@@ -201,7 +201,7 @@ public class UserServiceTests
                 Forename = forename,
                 Surname = surname,
                 Email = email,
-                DateOfBirth = dateOfBirth ?? new DateOnly(1972, 04, 15),
+                DateOfBirth = dateOfBirth ?? new DateTime(1972, 04, 15),
                 IsActive = isActive
             }
         }.AsQueryable();
@@ -219,11 +219,11 @@ public class UserServiceTests
 
 
     private Task<IQueryable<User>> SetupUsersAsync(
-        long id = 1,
+        string id = "a",
         string forename = "Johnny",
         string surname = "User",
         string email = "juser@example.com",
-        DateOnly? dateOfBirth = null,
+        DateTime? dateOfBirth = null,
         bool isActive = true)
     {
         var users = new[]
@@ -234,7 +234,7 @@ public class UserServiceTests
                 Forename = forename,
                 Surname = surname,
                 Email = email,
-                DateOfBirth = dateOfBirth ?? new DateOnly(1972, 04, 15),
+                DateOfBirth = dateOfBirth ?? new DateTime(1972, 04, 15),
                 IsActive = isActive
             }
         }.AsQueryable();

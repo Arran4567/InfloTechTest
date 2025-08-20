@@ -1,4 +1,4 @@
-@page "/users/{id:long}"
+@page "/users/{id}"
 @inject HttpClient Http
 @using UserManagement.UI.Models
 @using UserManagement.UI.Pages.Users.Partials
@@ -46,7 +46,7 @@ else
 
 @code {
     [CascadingParameter] public MainLayout Layout { get; set; } = default!;
-    [Parameter] public long id { get; set; }
+    [Parameter] public required string id { get; set; }
     private User? user;
 
     protected override async Task OnInitializedAsync()

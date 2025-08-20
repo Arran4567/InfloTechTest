@@ -97,7 +97,7 @@ else
         await Load();
     }
 
-    private async Task Delete(long id)
+    private async Task Delete(string id)
     {
         var resp = await Http.DeleteAsync($"/api/users/delete/{id}");
         if (resp.IsSuccessStatusCode)

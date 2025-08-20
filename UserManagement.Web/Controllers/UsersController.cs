@@ -33,8 +33,8 @@ public class UsersController : Controller
         return View();
     }
 
-    [HttpGet("detail/{id:long}")]
-    public ViewResult Detail(long id)
+    [HttpGet("detail/{id}")]
+    public ViewResult Detail(string id)
     {
         var user = _userService.GetById(id);
 
@@ -48,8 +48,8 @@ public class UsersController : Controller
         return View(model);
     }
 
-    [HttpGet("edit/{id:long}")]
-    public ViewResult Edit(long id)
+    [HttpGet("edit/{id}")]
+    public ViewResult Edit(string id)
     {
         var user = _userService.GetById(id);
 
@@ -62,8 +62,8 @@ public class UsersController : Controller
         return View(model);
     }
 
-    [HttpGet("delete/{id:long}")]
-    public IActionResult Delete(long id)
+    [HttpGet("delete/{id}")]
+    public IActionResult Delete(string id)
     {
         var entityToDelete = _userService.GetById(id);
 
@@ -82,28 +82,43 @@ public class UsersController : Controller
     #region HttpPost
 
     [HttpPost("Create")]
-    public IActionResult Create(User? model)
+    public IActionResult Create(UserListItemViewModel? model)
     {
         if (model == null)
         {
             return View("Error");
         }
-
-        _userService.Create(model);
-        _userService.AddLog(ref model, LogType.Create);
+        var user = new User
+        {
+            Forename = model.Forename,
+            Surname = model.Surname,
+            Email = model.Email,
+            DateOfBirth = model.DateOfBirth,
+            IsActive = model.IsActive,
+        };
+        _userService.Create(user);
+        _userService.AddLog(ref user, LogType.Create);
         return RedirectToAction("List");
     }
 
-    [HttpPost("edit/{id:long}")]
-    public IActionResult Edit(User? model)
+    [HttpPost("edit/{id}")]
+    public IActionResult Edit(UserListItemViewModel? model)
     {
         if (model == null)
         {
             return View("Error");
         }
 
-        _userService.Update(model);
-        _userService.AddLog(ref model, LogType.Update);
+        var user = _userService.GetById(model.Id);
+        user!.Forename = model.Forename;
+        user!.Surname = model.Surname;
+        user!.Email = model.Email;
+        user!.DateOfBirth = model.DateOfBirth;
+        user!.IsActive = model.IsActive;
+
+
+        _userService.Update(user);
+        _userService.AddLog(ref user, LogType.Update);
         return RedirectToAction("List");
     }
     #endregion

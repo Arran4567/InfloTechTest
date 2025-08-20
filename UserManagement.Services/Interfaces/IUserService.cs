@@ -12,7 +12,7 @@ public interface IUserService
     /// </summary>
     /// <param name="id">Unique identifier of user</param>
     /// <returns>User if found, otherwise null</returns>
-    User? GetById(long id);
+    User? GetById(string id);
 
     /// <summary>
     /// Get all users
@@ -57,7 +57,7 @@ public interface IUserService
     /// </summary>
     /// <param name="id">Unique identifier of user</param>
     /// <returns>User if found, otherwise null</returns>
-    Task<User?> GetByIdAsync(long id);
+    Task<User?> GetByIdAsync(string id);
 
     /// <summary>
     /// Get all users

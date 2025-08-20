@@ -1,4 +1,4 @@
-@page "/users/edit/{id:long}"
+@page "/users/edit/{id}"
 @inject HttpClient Http
 @inject NavigationManager Navigation
 @using UserManagement.UI.Models
@@ -22,7 +22,7 @@ else
 
 @code {
     [CascadingParameter] public MainLayout Layout { get; set; } = default!;
-    [Parameter] public long id { get; set; }
+    [Parameter] public required string id { get; set; }
     private User? model;
 
     protected override async Task OnInitializedAsync()
@@ -33,7 +33,7 @@ else
 
     private async Task HandleValidSubmit()
     {
-        var resp = await Http.PutAsJsonAsync("/api/users/edit", model);
+        var resp = await Http.PutAsJsonAsync("/api/users/edit", model!.ToListItemViewModel());
         if (resp.IsSuccessStatusCode)
         {
             Navigation.NavigateTo("/users");

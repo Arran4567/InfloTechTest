@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using UserManagement.Api.Models.Users;
 using UserManagement.Data.Enums;
 using UserManagement.Models;
 using UserManagement.Services.Domain.Interfaces;
@@ -25,8 +26,8 @@ public class UsersController : ControllerBase
         return Ok(users);
     }
 
-    [HttpGet("detail/{id:long}")]
-    public IActionResult Detail(long id)
+    [HttpGet("detail/{id}")]
+    public IActionResult Detail(string id)
     {
         var user = _userService.GetById(id);
 
@@ -44,35 +45,57 @@ public class UsersController : ControllerBase
     #region HttpPost
 
     [HttpPost("Create")]
-    public IActionResult Create(User model)
+    public IActionResult Create(UserListItemViewModel model)
     {
         if (!ModelState.IsValid)
         {
             return BadRequest(ModelState);
         }
-        _userService.Create(model);
-        _userService.AddLog(ref model, LogType.Create);
-        return Ok(model);
+
+        var user = new User
+        {
+            Forename = model.Forename,
+            Surname = model.Surname,
+            Email = model.Email,
+            DateOfBirth = model.DateOfBirth,
+            IsActive = model.IsActive,
+        };
+
+        _userService.Create(user);
+        _userService.AddLog(ref user, LogType.Create);
+        return Ok(user);
     }
 
     [HttpPut("edit")]
-    public IActionResult Edit(User model)
+    public IActionResult Edit(UserListItemViewModel model)
     {
         if (!ModelState.IsValid)
         {
             return BadRequest(ModelState);
         }
 
-        _userService.Update(model);
-        _userService.AddLog(ref model, LogType.Update);
-        return Ok(model);
+        if(model.Id == null)
+        {
+            return BadRequest("Invalid User.");
+        }
+
+        var user = _userService.GetById(model.Id);
+        user!.Forename = model.Forename;
+        user!.Surname = model.Surname;
+        user!.Email = model.Email;
+        user!.DateOfBirth = model.DateOfBirth;
+        user!.IsActive = model.IsActive;
+
+        _userService.Update(user);
+        _userService.AddLog(ref user, LogType.Update);
+        return Ok(user);
     }
     #endregion
 
     #region HttpDelete
 
-    [HttpDelete("delete/{id:long}")]
-    public IActionResult Delete(long id)
+    [HttpDelete("delete/{id}")]
+    public IActionResult Delete(string id)
     {
         var entityToDelete = _userService.GetById(id);
 
