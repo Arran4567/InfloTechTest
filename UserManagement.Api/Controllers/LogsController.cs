@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using UserManagement.Api.Models.Logs;
 using UserManagement.Data.Enums;
-    using UserManagement.Services.Domain.Interfaces;
+using UserManagement.Models;
+using UserManagement.Services.Domain.Interfaces;
 
     namespace UserManagement.Api.Controllers;
 
@@ -20,7 +22,7 @@ using UserManagement.Data.Enums;
         public IActionResult List(LogType? filter = null)
         {
             var model = filter.HasValue ? _logService.FilterByType(filter.Value) : _logService.GetAll();
-            return Ok(model);
+            return Ok(LogListToViewModel(model));
         }
 
         [HttpGet("Detail")]
@@ -32,10 +34,32 @@ using UserManagement.Data.Enums;
                 return BadRequest("Log not found");
             }
 
-            return Ok(model);
+            return Ok(LogToViewModel(model));
         }
 
-        #endregion
+    #endregion
 
-        #endregion
+
+    #region Private Methods
+
+    private LogListViewModel LogListToViewModel(IEnumerable<Log> logs)
+    {
+        var items = logs.Select(l => LogToViewModel(l)).ToList();
+        return new LogListViewModel { Items = items };
     }
+
+    private LogListItemViewModel LogToViewModel(Log log)
+    {
+        return new LogListItemViewModel
+        {
+            Id = log.Id,
+            Type = log.Type,
+            Description = log.Description,
+            DateTime = log.DateTime
+        };
+    }
+
+    #endregion
+
+    #endregion
+}

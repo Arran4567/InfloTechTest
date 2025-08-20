@@ -6,7 +6,7 @@
 {
     <p>Loading...</p>
 }
-else if (users.Count == 0)
+else if (users.Items.Count == 0)
 {
     <p>No users found.</p>
 }
@@ -26,7 +26,7 @@ else
                 </tr>
             </thead>
             <tbody>
-                @foreach (var item in users)
+                @foreach (var item in users.Items)
                 {
                     <tr>
                         <td>
@@ -59,7 +59,7 @@ else
                                 <ul class="dropdown-menu" aria-labelledby="btnToggleActions@item.Id">
                                     <li><a class="dropdown-item" href="/users/@item.Id">View</a></li>
                                     <li><a class="dropdown-item" href="/users/edit/@item.Id">Edit</a></li>
-                                    <li><a class="dropdown-item" @onclick="() => Delete(item.Id)">Delete</a></li>
+                                    <li><a class="dropdown-item" @onclick="async () => { if (item.Id != null) { await Delete(item.Id); } }">Delete</a></li>
                                 </ul>
                             </div>
                         </td>
@@ -78,7 +78,7 @@ else
 
 @code {
     [CascadingParameter] public MainLayout Layout { get; set; } = default!;
-    private List<User>? users;
+    private UserListViewModel? users;
     private bool? filter;
 
     protected override async Task OnInitializedAsync() {
@@ -88,7 +88,7 @@ else
     private async Task Load()
     {
         var url = filter.HasValue ? $"/api/users?filter={filter}" : "/api/users";
-        users = await Http.GetFromJsonAsync<List<User>>(url);
+        users = await Http.GetFromJsonAsync<UserListViewModel>(url);
     }
 
     private async Task SetFilter(bool? e)

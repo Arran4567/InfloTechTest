@@ -6,7 +6,7 @@
 {
     <p>Loading...</p>
 }
-else if (logs.Count == 0)
+else if (logs.Items.Count == 0)
 {
     <p>No logs found.</p>
 }
@@ -21,7 +21,7 @@ else
                 </tr>
             </thead>
             <tbody>
-                @foreach (var item in logs)
+                @foreach (var item in logs.Items)
                 {
                     <tr>
                         <td>
@@ -45,7 +45,7 @@ else
 
 @code {
     [CascadingParameter] public MainLayout Layout { get; set; } = default!;
-    private List<Log>? logs;
+    private LogListViewModel? logs;
     private int? selectedType;
 
     protected override async Task OnInitializedAsync()
@@ -57,7 +57,7 @@ else
     private async Task LoadData()
     {
         var url = selectedType.HasValue ? $"/api/logs?filter={selectedType.Value}" : "/api/logs";
-        logs = await Http.GetFromJsonAsync<List<Log>>(url);
+        logs = await Http.GetFromJsonAsync<LogListViewModel>(url);
     }
 
     private async Task SetFilter(int? filter)

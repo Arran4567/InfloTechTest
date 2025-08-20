@@ -27,7 +27,7 @@ else
 @code {
     [CascadingParameter] public MainLayout Layout { get; set; } = default!;
     [Parameter] public long id { get; set; }
-    private Log? log;
+    private LogListItemViewModel? log;
 
     protected override void OnInitialized()
     {
@@ -36,7 +36,7 @@ else
 
     protected override async Task OnParametersSetAsync()
     {
-        log = await Http.GetFromJsonAsync<Log>($"/api/logs/detail?id={id}");
+        log = await Http.GetFromJsonAsync<LogListItemViewModel>($"/api/logs/detail?id={id}");
     }
 }
 

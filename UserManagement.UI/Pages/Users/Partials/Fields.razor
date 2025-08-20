@@ -35,6 +35,6 @@
 
 @code {
     [CascadingParameter] public MainLayout Layout { get; set; } = default!;
-    [Parameter] public User User { get; set; } = new();
+    [Parameter] public UserListItemViewModel User { get; set; } = new();
     [Parameter] public bool Readonly { get; set; } = false;
 }

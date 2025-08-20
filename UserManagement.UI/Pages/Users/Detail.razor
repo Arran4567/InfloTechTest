@@ -22,22 +22,25 @@ else
                 </tr>
             </thead>
             <tbody>
-                @foreach (var item in user.Logs)
+                @if(user != null)
                 {
-                    <tr>
-                        <td>
-                            @item.Id
-                        </td>
-                        <td>
-                            @item.Type.ToString()
-                        </td>
-                        <td>
-                            @item.Description
-                        </td>
-                        <td>
-                            @item.DateTime
-                        </td>
-                    </tr>
+                    foreach (var item in user.Logs.Items)
+                    {
+                        <tr>
+                            <td>
+                                @item.Id
+                            </td>
+                            <td>
+                                @item.Type.ToString()
+                            </td>
+                            <td>
+                                @item.Description
+                            </td>
+                            <td>
+                                @item.DateTime
+                            </td>
+                        </tr>
+                    }
                 }
             </tbody>
         </table>
@@ -47,11 +50,11 @@ else
 @code {
     [CascadingParameter] public MainLayout Layout { get; set; } = default!;
     [Parameter] public required string id { get; set; }
-    private User? user;
+    private UserListItemViewModel? user;
 
     protected override async Task OnInitializedAsync()
     {
         Layout.PageHeader = "User Detail";
-        user = await Http.GetFromJsonAsync<User>($"/api/users/detail/{id}");
+        user = await Http.GetFromJsonAsync<UserListItemViewModel>($"/api/users/detail/{id}");
     }
 }

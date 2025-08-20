@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using UserManagement.Api.Models.Logs;
 using UserManagement.Api.Models.Users;
 using UserManagement.Data.Enums;
 using UserManagement.Models;
@@ -23,7 +24,7 @@ public class UsersController : ControllerBase
     {
         var users = filter.HasValue ? _userService.FilterByActive(filter.Value) : _userService.GetAll();
 
-        return Ok(users);
+        return Ok(UserListToViewModel(users));
     }
 
     [HttpGet("detail/{id}")]
@@ -37,7 +38,7 @@ public class UsersController : ControllerBase
         }
 
         _userService.AddLog(ref user, LogType.View);
-        return Ok(user);
+        return Ok(UserToViewModel(user));
     }
 
     #endregion
@@ -63,7 +64,7 @@ public class UsersController : ControllerBase
 
         _userService.Create(user);
         _userService.AddLog(ref user, LogType.Create);
-        return Ok(user);
+        return Ok(UserToViewModel(user));
     }
 
     [HttpPut("edit")]
@@ -88,7 +89,7 @@ public class UsersController : ControllerBase
 
         _userService.Update(user);
         _userService.AddLog(ref user, LogType.Update);
-        return Ok(user);
+        return Ok(UserToViewModel(user));
     }
     #endregion
 
@@ -108,6 +109,42 @@ public class UsersController : ControllerBase
         _userService.Delete(entityToDelete);
         return Ok();
     }
+
+    #endregion
+
+    #region Private Methods
+
+    private UserListViewModel UserListToViewModel(IEnumerable<User> users)
+    {
+        var items = users.Select(u => UserToViewModel(u)).ToList();
+        return new UserListViewModel { Items = items };
+    }
+
+    private UserListItemViewModel UserToViewModel(User user)
+    {
+        return new UserListItemViewModel
+        {
+            Id = user.Id,
+            Forename = user.Forename,
+            Surname = user.Surname,
+            Email = user.Email,
+            DateOfBirth = user.DateOfBirth,
+            IsActive = user.IsActive,
+            Logs = MapLogs(user.Logs)
+        };
+    }
+
+    private LogListViewModel MapLogs(IEnumerable<Log> logs) =>
+    new LogListViewModel
+    {
+        Items = logs.Select(l => new LogListItemViewModel
+        {
+            Id = l.Id,
+            Type = l.Type,
+            Description = l.Description,
+            DateTime = l.DateTime
+        }).ToList()
+    };
 
     #endregion
 

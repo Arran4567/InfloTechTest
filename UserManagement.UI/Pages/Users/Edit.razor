@@ -23,17 +23,17 @@ else
 @code {
     [CascadingParameter] public MainLayout Layout { get; set; } = default!;
     [Parameter] public required string id { get; set; }
-    private User? model;
+    private UserListItemViewModel? model;
 
     protected override async Task OnInitializedAsync()
     {
         Layout.PageHeader = "Edit User";
-        model = await Http.GetFromJsonAsync<User>($"/api/users/detail/{id}");
+        model = await Http.GetFromJsonAsync<UserListItemViewModel>($"/api/users/detail/{id}");
     }
 
     private async Task HandleValidSubmit()
     {
-        var resp = await Http.PutAsJsonAsync("/api/users/edit", model!.ToListItemViewModel());
+        var resp = await Http.PutAsJsonAsync("/api/users/edit", model);
         if (resp.IsSuccessStatusCode)
         {
             Navigation.NavigateTo("/users");

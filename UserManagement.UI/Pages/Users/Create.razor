@@ -15,7 +15,7 @@
 
 @code {
     [CascadingParameter] public MainLayout Layout { get; set; } = default!;
-    private User model = new();
+    private UserListItemViewModel model = new();
 
     protected override void OnInitialized()
     {
@@ -24,7 +24,7 @@
 
     private async Task HandleValidSubmit()
     {
-        var resp = await Http.PostAsJsonAsync("/api/users/Create", model!.ToListItemViewModel());
+        var resp = await Http.PostAsJsonAsync("/api/users/Create", model);
         if (resp.IsSuccessStatusCode)
         {
             // navigate back to users
