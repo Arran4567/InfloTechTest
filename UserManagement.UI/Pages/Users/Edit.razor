@@ -25,13 +25,9 @@ else
     [Parameter] public long id { get; set; }
     private User? model;
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
         Layout.PageHeader = "Edit User";
-    }
-
-    protected override async Task OnParametersSetAsync()
-    {
         model = await Http.GetFromJsonAsync<User>($"/api/users/detail/{id}");
     }
 

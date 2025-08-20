@@ -49,13 +49,9 @@ else
     [Parameter] public long id { get; set; }
     private User? user;
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
         Layout.PageHeader = "User Detail";
-    }
-
-    protected override async Task OnParametersSetAsync()
-    {
         user = await Http.GetFromJsonAsync<User>($"/api/users/detail/{id}");
     }
 }
