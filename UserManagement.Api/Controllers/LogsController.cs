@@ -1,41 +1,43 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using UserManagement.Api.Models.Logs;
 using UserManagement.Data.Enums;
 using UserManagement.Models;
 using UserManagement.Services.Domain.Interfaces;
 
-    namespace UserManagement.Api.Controllers;
+namespace UserManagement.Api.Controllers;
 
-    [Route("api/logs")]
-    [ApiController]
-    public class LogsController : ControllerBase
+[Route("api/logs")]
+[ApiController]
+[Authorize]
+public class LogsController : ControllerBase
+{
+    private readonly ILogService _logService;
+    public LogsController(ILogService userService) => _logService = userService;
+
+    #region Public Methods
+
+    #region HttpGet
+
+    [HttpGet("")]
+    [HttpGet("list")]
+    public IActionResult List(LogType? filter = null)
     {
-        private readonly ILogService _logService;
-        public LogsController(ILogService userService) => _logService = userService;
+        var model = filter.HasValue ? _logService.FilterByType(filter.Value) : _logService.GetAll();
+        return Ok(LogListToViewModel(model));
+    }
 
-        #region Public Methods
-
-        #region HttpGet
-
-        [HttpGet("")]
-        [HttpGet("list")]
-        public IActionResult List(LogType? filter = null)
+    [HttpGet("Detail")]
+    public IActionResult Detail(long id)
+    {
+        var model = _logService.GetById(id);
+        if (model == null)
         {
-            var model = filter.HasValue ? _logService.FilterByType(filter.Value) : _logService.GetAll();
-            return Ok(LogListToViewModel(model));
+            return BadRequest("Log not found");
         }
 
-        [HttpGet("Detail")]
-        public IActionResult Detail(long id)
-        {
-            var model = _logService.GetById(id);
-            if (model == null)
-            {
-                return BadRequest("Log not found");
-            }
-
-            return Ok(LogToViewModel(model));
-        }
+        return Ok(LogToViewModel(model));
+    }
 
     #endregion
 

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using UserManagement.Api.Models.Logs;
 using UserManagement.Api.Models.Users;
 using UserManagement.Data.Enums;
@@ -9,6 +10,7 @@ namespace UserManagement.Api.Controllers;
 
 [Route("api/users")]
 [ApiController]
+[Authorize]
 public class UsersController : ControllerBase
 {
     private readonly IUserService _userService;

@@ -1,5 +1,6 @@
 @page "/users/{id}"
 @inject HttpClient Http
+@inject IJSRuntime JS
 @using UserManagement.UI.Models
 @using UserManagement.UI.Pages.Users.Partials
 
@@ -55,6 +56,20 @@ else
     protected override async Task OnInitializedAsync()
     {
         Layout.PageHeader = "User Detail";
-        user = await Http.GetFromJsonAsync<UserListItemViewModel>($"/api/users/detail/{id}");
+        var token = await JS.InvokeAsync<string>("localStorage.getItem", "authToken");
+        var request = new HttpRequestMessage(HttpMethod.Get, $"/api/users/detail/{id}");
+        if (!string.IsNullOrEmpty(token))
+        {
+            request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+        }
+        var response = await Http.SendAsync(request);
+        if (response.IsSuccessStatusCode)
+        {
+            user = await response.Content.ReadFromJsonAsync<UserListItemViewModel>();
+        }
+        else
+        {
+            user = null;
+        }
     }
 }
