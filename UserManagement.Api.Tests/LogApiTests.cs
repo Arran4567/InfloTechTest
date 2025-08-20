@@ -5,21 +5,35 @@ using UserManagement.Api.Controllers;
 using UserManagement.Data.Enums;
 using UserManagement.Models;
 using UserManagement.Services.Domain.Interfaces;
+using UserManagement.Api.Models.Logs;
 
 namespace UserManagement.Data.Tests;
 
 public class LogApiTests
 {
+    private readonly Mock<ILogService> _logService = new();
+    private LogsController CreateController() => new(_logService.Object);
+
     [Fact]
     public void List_WhenServiceReturnsLogs_ReturnsAllLogs()
     {
         var controller = CreateController();
         var logs = SetupLogs();
 
+        var expected = logs.Select(l => new LogListItemViewModel
+        {
+            Id = l.Id,
+            Type = l.Type,
+            Description = l.Description,
+            DateTime = l.DateTime
+        }).ToList();
+
         var result = controller.List() as OkObjectResult;
 
         result.Should().NotBeNull();
-        result!.Value.Should().BeEquivalentTo(logs);
+        var vm = result!.Value as LogListViewModel;
+        vm.Should().NotBeNull();
+        vm!.Items.Should().BeEquivalentTo(expected);
     }
 
     [Fact]
@@ -29,10 +43,21 @@ public class LogApiTests
         var logs = SetupLogs(LogType.View);
         _logService.Setup(s => s.FilterByType(LogType.View)).Returns(logs);
 
+        var expected = logs.Select(l => new LogListItemViewModel
+        {
+            Id = l.Id,
+            Type = l.Type,
+            Description = l.Description,
+            DateTime = l.DateTime
+        }).ToList();
+
         var result = controller.List(LogType.View) as OkObjectResult;
 
         _logService.Verify(s => s.FilterByType(LogType.View), Times.Once);
-        result!.Value.Should().BeEquivalentTo(logs);
+
+        var vm = result!.Value as LogListViewModel;
+        vm.Should().NotBeNull();
+        vm!.Items.Should().BeEquivalentTo(expected);
     }
 
     [Fact]
@@ -42,10 +67,18 @@ public class LogApiTests
         var log = SetupLogs().First();
         _logService.Setup(s => s.GetById(log.Id)).Returns(log);
 
+        var expected = new LogListItemViewModel
+        {
+            Id = log.Id,
+            Type = log.Type,
+            Description = log.Description,
+            DateTime = log.DateTime
+        };
+
         var result = controller.Detail(log.Id) as OkObjectResult;
 
         result.Should().NotBeNull();
-        result!.Value.Should().BeEquivalentTo(log);
+        result!.Value.Should().BeEquivalentTo(expected);
     }
 
     [Fact]
@@ -78,7 +111,4 @@ public class LogApiTests
 
         return logs;
     }
-
-    private readonly Mock<ILogService> _logService = new();
-    private LogsController CreateController() => new(_logService.Object);
 }

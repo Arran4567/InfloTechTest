@@ -1,8 +1,8 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using UserManagement.Api.Controllers;
+using UserManagement.Api.Models.Logs;
 using UserManagement.Api.Models.Users;
 using UserManagement.Models;
 using UserManagement.Services.Domain.Interfaces;
@@ -20,8 +20,8 @@ public class UserApiTests
         var result = controller.List() as OkObjectResult;
 
         result!.StatusCode.Should().Be(200);
-        var returnedUsers = result.Value as IQueryable<User>;
-        returnedUsers.Should().BeEquivalentTo(users, opts => opts.Excluding(u => u.Logs));
+        var returnedUsers = result.Value as UserListViewModel;
+        returnedUsers!.Items.Should().BeEquivalentTo(users.Select(UserToViewModel), opts => opts.Excluding(x => x.Logs));
     }
 
     [Fact]
@@ -33,9 +33,8 @@ public class UserApiTests
         var result = controller.List(filter: true) as OkObjectResult;
 
         _userService.Verify(s => s.FilterByActive(true), Times.Once);
-
-        result!.Value.Should().BeAssignableTo<IEnumerable<User>>()
-            .Which.Should().BeEquivalentTo(users, opts => opts.Excluding(u => u.Logs));
+        var returnedUsers = result!.Value as UserListViewModel;
+        returnedUsers!.Items.Should().BeEquivalentTo(users.Where(u => u.IsActive).Select(UserToViewModel), opts => opts.Excluding(x => x.Logs));
     }
 
     [Fact]
@@ -43,12 +42,11 @@ public class UserApiTests
     {
         var controller = CreateController();
         var user = SetupUsers().First();
-        _userService.Setup(s => s.GetById(user.Id)).Returns(user);
 
         var result = controller.Detail(user.Id) as OkObjectResult;
 
         result!.StatusCode.Should().Be(200);
-        var returnedUser = result.Value as User;
+        var returnedUser = result.Value as UserListItemViewModel;
         returnedUser!.Id.Should().Be(user.Id);
     }
 
@@ -58,7 +56,7 @@ public class UserApiTests
         var controller = CreateController();
         _userService.Setup(s => s.GetById(It.IsAny<string>())).Returns((User?)null);
 
-        var result = controller.Detail("a") as OkObjectResult;
+        var result = controller.Detail("nonexistent") as OkObjectResult;
 
         result!.StatusCode.Should().Be(200);
         result.Value.Should().Be("User not found.");
@@ -68,17 +66,22 @@ public class UserApiTests
     public void Create_Post_WhenModelIsValid_CreatesUserAndReturnsOk()
     {
         var controller = CreateController();
-        var user = new User
+        var model = new UserListItemViewModel
         {
             Forename = "Test",
-            Surname = "Test",
-            DateOfBirth = new DateTime(2000,01,01),
-            Email = "Test@Test.com",
-            IsActive = true
+            Surname = "User",
+            Email = "test@example.com",
+            DateOfBirth = new DateTime(2000, 1, 1),
+            IsActive = true,
+            Logs = new LogListViewModel()
         };
-        var result = controller.Create(UserToViewModel(user)) as OkObjectResult;
+
+        var result = controller.Create(model) as OkObjectResult;
+
         _userService.Verify(s => s.Create(It.IsAny<User>()), Times.Once);
-        result!.Value.Should().BeEquivalentTo(UserToViewModel(user), options => options.Excluding(x => x.Id).Excluding(x => x.Logs));
+        result!.StatusCode.Should().Be(200);
+        var returnedUser = result.Value as UserListItemViewModel;
+        returnedUser.Should().BeEquivalentTo(model, opts => opts.Excluding(u => u.Id));
     }
 
     [Fact]
@@ -97,11 +100,14 @@ public class UserApiTests
     {
         var controller = CreateController();
         var user = SetupUsers().First();
+        var model = UserToViewModel(user);
 
-        var result = controller.Edit(UserToViewModel(user)) as OkObjectResult;
+        var result = controller.Edit(model) as OkObjectResult;
 
-        _userService.Verify(s => s.Update(user), Times.Once);
-        result!.Value.Should().Be(user);
+        _userService.Verify(s => s.Update(It.Is<User>(u => u.Id == user.Id)), Times.Once);
+        result!.StatusCode.Should().Be(200);
+        var returnedUser = result.Value as UserListItemViewModel;
+        returnedUser.Should().BeEquivalentTo(model, opts => opts.Excluding(x => x.Logs));
     }
 
     [Fact]
@@ -134,7 +140,7 @@ public class UserApiTests
         var controller = CreateController();
         _userService.Setup(s => s.GetById(It.IsAny<string>())).Returns((User?)null);
 
-        var result = controller.Delete("a") as BadRequestObjectResult;
+        var result = controller.Delete("nonexistent") as BadRequestObjectResult;
 
         result!.Value.Should().Be("User not found.");
     }
