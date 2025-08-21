@@ -43,7 +43,7 @@ public class UsersController : Controller
             return View("Error");
         }
 
-        _userService.AddLog(ref user, LogType.View);
+        _userService.AddLog(user.Id, LogType.View);
         var model = UserToViewModel(user);
         return View(model);
     }
@@ -72,7 +72,7 @@ public class UsersController : Controller
             return View("Error");
         }
 
-        _userService.AddLog(ref entityToDelete, LogType.Delete);
+        _userService.AddLog(entityToDelete.Id, LogType.Delete);
         _userService.Delete(entityToDelete);
         return RedirectToAction("List");
     }
@@ -97,7 +97,7 @@ public class UsersController : Controller
             IsActive = model.IsActive,
         };
         _userService.Create(user);
-        _userService.AddLog(ref user, LogType.Create);
+        _userService.AddLog(user.Id, LogType.Create);
         return RedirectToAction("List");
     }
 
@@ -118,7 +118,7 @@ public class UsersController : Controller
 
 
         _userService.Update(user);
-        _userService.AddLog(ref user, LogType.Update);
+        _userService.AddLog(user.Id, LogType.Update);
         return RedirectToAction("List");
     }
     #endregion

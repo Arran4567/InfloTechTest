@@ -15,7 +15,12 @@ namespace UserManagement.Api.Controllers;
 public class UsersController : ControllerBase
 {
     private readonly IUserService _userService;
-    public UsersController(IUserService userService) => _userService = userService;
+    private readonly IBackgroundJobClient _backgroundJobClient;
+
+    public UsersController(IUserService userService, IBackgroundJobClient backgroundJobClient){
+        _userService = userService;
+        _backgroundJobClient = backgroundJobClient;
+    } 
 
     #region Public Methods
 
@@ -40,7 +45,7 @@ public class UsersController : ControllerBase
             return Ok("User not found.");
         }
 
-        BackgroundJob.Enqueue(() => _userService.AddLog(user.Id, LogType.View));
+        _backgroundJobClient.Enqueue(() => _userService.AddLog(user.Id, LogType.View));
         return Ok(UserToViewModel(user));
     }
 
@@ -66,7 +71,7 @@ public class UsersController : ControllerBase
         };
 
         _userService.Create(user);
-        BackgroundJob.Enqueue(() => _userService.AddLog(user.Id, LogType.Create));
+        _backgroundJobClient.Enqueue(() => _userService.AddLog(user.Id, LogType.Create));
         return Ok(UserToViewModel(user));
     }
 
@@ -91,7 +96,7 @@ public class UsersController : ControllerBase
         user!.IsActive = model.IsActive;
 
         _userService.Update(user);
-        BackgroundJob.Enqueue(() => _userService.AddLog(user.Id, LogType.Update));
+        _backgroundJobClient.Enqueue(() => _userService.AddLog(user.Id, LogType.Update));
         return Ok(UserToViewModel(user));
     }
     #endregion
@@ -108,7 +113,7 @@ public class UsersController : ControllerBase
             return BadRequest("User not found.");
         }
 
-        BackgroundJob.Enqueue(() => _userService.AddLog(entityToDelete.Id, LogType.Delete));
+        _backgroundJobClient.Enqueue(() => _userService.AddLog(entityToDelete.Id, LogType.Delete));
         _userService.Delete(entityToDelete);
         return Ok();
     }

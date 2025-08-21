@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using Hangfire;
 using Microsoft.AspNetCore.Mvc;
 using UserManagement.Api.Controllers;
 using UserManagement.Api.Models.Logs;
@@ -168,7 +169,8 @@ public class UserApiTests
         return users;
     }
     private readonly Mock<IUserService> _userService = new();
-    private UsersController CreateController() => new(_userService.Object);
+    private readonly Mock<IBackgroundJobClient> _backgroundJobClient = new();
+    private UsersController CreateController() => new(_userService.Object, _backgroundJobClient.Object);
 
     private UserListItemViewModel UserToViewModel(User user) => new UserListItemViewModel
     {
