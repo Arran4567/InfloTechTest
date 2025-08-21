@@ -22,7 +22,7 @@ public class UserApiTests
 
         result!.StatusCode.Should().Be(200);
         var returnedUsers = result.Value as UserListViewModel;
-        returnedUsers!.Items.Should().BeEquivalentTo(users.Select(UserToViewModel));
+        returnedUsers!.Items.Should().BeEquivalentTo(users.Select(UserToViewModel), opts => opts.Excluding(x => x.Logs));
     }
 
     [Fact]
