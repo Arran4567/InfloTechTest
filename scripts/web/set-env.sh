@@ -14,4 +14,5 @@ export TF_VAR_azure_subscription_id=${AZURE_SUBSCRIPTION_ID}
 export TF_VAR_azure_client_id=${AZURE_CLIENT_ID}
 export TF_VAR_azure_client_secret=${AZURE_CLIENT_SECRET}
 export TF_VAR_azure_tenant_id=${AZURE_TENANT_ID}
+export TF_VAR_azure_location="ukwest"
 mkdir -p $ARTIFACTS_DIR
