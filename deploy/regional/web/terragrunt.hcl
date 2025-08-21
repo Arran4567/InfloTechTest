@@ -7,5 +7,5 @@ terraform {
 }
 
 include {
-    path = "${find_in_parent_folders("state-regional.hcl")}"
+    path = "${find_in_parent_folders("state-azure.hcl")}"
 }
