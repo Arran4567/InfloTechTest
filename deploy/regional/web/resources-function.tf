@@ -30,12 +30,12 @@ resource "azurerm_windows_function_app" "main" {
 
   site_config {
     application_stack {
-      dotnet_version = "9.0"
+      dotnet_version = "v9.0"
     }
   }
 
   app_settings = {
-    "DOTNET_VERSION"           = "9.0"
+    "DOTNET_VERSION"           = "v9.0"
     "FUNCTIONS_WORKER_RUNTIME" = "dotnet-isolated"
     "ENVIRONMENT"              = var.environment
   }
