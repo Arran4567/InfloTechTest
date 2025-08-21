@@ -25,13 +25,6 @@ jobs:
 
       - name: Run Tests
         run: dotnet test UserManagement.sln --no-build --verbosity normal
-  
-  terraform:
-    runs-on: ubuntu-latest
-    steps:
-      
-      - name: Checkout code
-        uses: actions/checkout@v3
 
       - name: Install Terraform
         uses: hashicorp/setup-terraform@v2
