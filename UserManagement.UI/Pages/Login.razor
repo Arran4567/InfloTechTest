@@ -40,8 +40,10 @@
                 {
                     // Store token (for now, localStorage via JSInterop or memory)
                     await JS.InvokeVoidAsync("localStorage.setItem", "authToken", result.Token);
+                    await JS.InvokeVoidAsync("localStorage.setItem", "authTokenExpiration", result.Expiration);
+                    StateHasChanged();
                     // Redirect to home or users page
-                    Navigation.NavigateTo("/");
+                    Navigation.NavigateTo("/", forceLoad: true);
                 }
                 else
                 {
@@ -65,5 +67,7 @@
     private class LoginResult
     {
         public string? Token { get; set; }
+        public string? Expiration { get; set; }
+        public string? Email { get; set; }
     }
 }
