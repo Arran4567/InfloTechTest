@@ -46,7 +46,7 @@ namespace UserManagement.Data
 
             foreach (var user in users)
             {
-                user.UserName = $"{user.Surname}{user.Forename[0]}";
+                user.UserName = user.Email;
                 if (await _userManager.FindByEmailAsync(user.Email!) is null)
                 {
                     var password = $"{user.Surname}123!";

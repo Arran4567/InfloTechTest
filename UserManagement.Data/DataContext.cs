@@ -8,7 +8,9 @@ namespace UserManagement.Data;
 
 public class DataContext : IdentityDbContext<User>, IDataContext
 {
-    public DataContext(DbContextOptions<DataContext> options) : base(options) => Database.EnsureCreated();
+    public DataContext(DbContextOptions<DataContext> options) : base(options)
+    {
+    }
 
     protected override void OnModelCreating(ModelBuilder model)
     {
