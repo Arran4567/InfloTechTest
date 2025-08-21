@@ -1,15 +1,18 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using UserManagement.Data;
 using UserManagement.Models;
 using Westwind.AspNetCore.Markdown;
 
 var builder = WebApplication.CreateBuilder(args);
+var configuration = builder.Configuration;
 
 builder.Services.AddDbContext<DataContext>(options =>
-    options.UseInMemoryDatabase("UserManagementDb"));
+                options.UseSqlServer(
+                        configuration.GetConnectionString("DatabaseConnection")));
 
 builder.Services
     .AddIdentity<User, IdentityRole>()
@@ -27,6 +30,9 @@ var app = builder.Build();
 // Seed the database
 using (var scope = app.Services.CreateScope())
 {
+    var db = scope.ServiceProvider.GetRequiredService<DataContext>();
+    db.Database.Migrate();
+
     var dbInitializer = scope.ServiceProvider.GetRequiredService<IDbInitializer>();
     await dbInitializer.InitializeAsync();
 }
