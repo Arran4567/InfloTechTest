@@ -4,8 +4,8 @@
 echo "Setting deployment variables"
 
 cp $PLAN_FILE_PATH $TERRAGRUNT_DIRECTORY
+cd $TERRAGRUNT_DIRECTORY
+ls -l
 
 terragrunt apply -auto-approve \
-    $PLAN_FILE_PATH \
-    --terragrunt-non-interactive \
-    --terragrunt-working-dir $TERRAGRUNT_DIRECTORY
+    $PLAN_FILE_PATH

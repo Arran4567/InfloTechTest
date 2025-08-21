@@ -7,5 +7,4 @@ cd $TERRAGRUNT_DIRECTORY
 ls -l
 
 terragrunt plan -input=false \
-    -out=$PLAN_FILE_PATH \
-    --terragrunt-non-interactive
+    -out=$PLAN_FILE_PATH
