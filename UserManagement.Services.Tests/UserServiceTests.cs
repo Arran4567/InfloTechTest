@@ -35,6 +35,7 @@ public class UserServiceTests
 
         // Assert: Verifies that the returned user matches the expected user from the data context.
         result.Should().BeSameAs(users.First());
+        result.Should().BeSameAs(users.First());
     }
 
     [Fact]

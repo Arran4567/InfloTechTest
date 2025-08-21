@@ -43,12 +43,13 @@ public class UserService : IUserService
         _dataAccess.Delete(user);
     }
 
-    public void AddLog(ref User user, LogType type)
+    public void AddLog(string id, LogType type)
     {
+        var user = _dataAccess.Find<User>(id);
         var log = new Log
         {
             Type = type,
-            Description = type.ToDescription($"{user.Forename} {user.Surname}"),
+            Description = type.ToDescription($"{user!.Forename} {user!.Surname}"),
             User = user,
         };
 

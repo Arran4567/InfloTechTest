@@ -50,7 +50,7 @@ public interface IUserService
     /// </summary>
     /// <param name="user">User to add log to</param>
     /// <param name="type">Action performed on user</param>
-    void AddLog(ref User user, LogType type);
+    void AddLog(string id, LogType type);
 
     /// <summary>
     /// Get user by unique identifier

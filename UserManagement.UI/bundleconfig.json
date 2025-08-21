@@ -3,7 +3,7 @@
         "outputFileName": "wwwroot/dist/site.min.css",
         "inputFiles": [
             "wwwroot/css/site.css",
-            "wwwroot/lib/bootstrap/dist/css/*.css"
+            "wwwroot/lib/bootstrap/dist/css/bootstrap.min.css"
         ],
         "minify": {
             "enabled": true
@@ -12,14 +12,12 @@
     {
         "outputFileName": "wwwroot/dist/site.min.js",
         "inputFiles": [
-            "wwwroot/lib/jquery/dist/jquery.js",
-            "wwwroot/lib/bootstrap/dist/js/bootstrap.js",
-            "wwwroot/lib/jquery-validation/dist/*.js",
-            "wwwroot/lib/jquery-validation-unobtrusive/*.js",
+            "wwwroot/lib/bootstrap/dist/js/bootstrap.bundle.min.js",
+            "wwwroot/lib/jquery/dist/jquery.min.js",
             "wwwroot/js/site.js"
         ],
         "minify": {
-            "enabled": true,
+            "enabled": false,
             "renameLocals": false
         }
     }

@@ -1,4 +1,5 @@
 using System.Text;
+using Hangfire;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -51,6 +52,13 @@ builder.Services.AddAuthentication(options =>
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JWT:Secret"]!))
     };
 });
+
+builder.Services.AddHangfire(config =>
+{
+    config.UseSqlServerStorage(configuration.GetConnectionString("DatabaseConnection"));
+});
+
+builder.Services.AddHangfireServer();
 
 var app = builder.Build();
 

@@ -5,6 +5,7 @@ using UserManagement.Api.Models.Users;
 using UserManagement.Data.Enums;
 using UserManagement.Models;
 using UserManagement.Services.Domain.Interfaces;
+using Hangfire;
 
 namespace UserManagement.Api.Controllers;
 
@@ -39,7 +40,7 @@ public class UsersController : ControllerBase
             return Ok("User not found.");
         }
 
-        _userService.AddLog(ref user, LogType.View);
+        BackgroundJob.Enqueue(() => _userService.AddLog(user.Id, LogType.View));
         return Ok(UserToViewModel(user));
     }
 
@@ -65,7 +66,7 @@ public class UsersController : ControllerBase
         };
 
         _userService.Create(user);
-        _userService.AddLog(ref user, LogType.Create);
+        BackgroundJob.Enqueue(() => _userService.AddLog(user.Id, LogType.Create));
         return Ok(UserToViewModel(user));
     }
 
@@ -90,7 +91,7 @@ public class UsersController : ControllerBase
         user!.IsActive = model.IsActive;
 
         _userService.Update(user);
-        _userService.AddLog(ref user, LogType.Update);
+        BackgroundJob.Enqueue(() => _userService.AddLog(user.Id, LogType.Update));
         return Ok(UserToViewModel(user));
     }
     #endregion
@@ -107,7 +108,7 @@ public class UsersController : ControllerBase
             return BadRequest("User not found.");
         }
 
-        _userService.AddLog(ref entityToDelete, LogType.Delete);
+        BackgroundJob.Enqueue(() => _userService.AddLog(entityToDelete.Id, LogType.Delete));
         _userService.Delete(entityToDelete);
         return Ok();
     }
