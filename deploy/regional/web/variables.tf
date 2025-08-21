@@ -2,6 +2,11 @@ variable "environment" {
   type = string
 }
 
+variable "azure_subscription_id" {
+  type        = string
+  description = "Azure subscription ID to use for the provider"
+}
+
 variable "azure_client_id" {
   type        = string
   description = "Azure Service Principal Client ID"
