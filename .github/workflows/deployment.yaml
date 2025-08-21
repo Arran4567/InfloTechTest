@@ -25,3 +25,37 @@ jobs:
 
       - name: Run Tests
         run: dotnet test UserManagement.sln --no-build --verbosity normal
+  
+  terraform:
+    runs-on: ubuntu-latest
+    steps:
+      
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Install Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: 1.9.5
+
+      - name: Install Terragrunt
+        run: |
+          TG_VERSION=0.67.4          # pick the latest stable
+          curl -L https://github.com/gruntwork-io/terragrunt/releases/download/v${TG_VERSION}/terragrunt_linux_amd64 -o terragrunt
+          chmod +x terragrunt
+          sudo mv terragrunt /usr/local/bin/
+      
+      - name: Set execute permissions
+        run: |
+          chmod +x ./scripts/web/build.sh
+          chmod +x ./scripts/web/plan.sh
+          chmod +x ./scripts/web/apply.sh
+
+      - name: Run npm build
+        run: ./scripts/web/build.sh stage
+
+      - name: Plan API
+        run: ./scripts/web/plan.sh stage
+
+      - name: Apply API
+        run: ./scripts/web/apply.sh stage
