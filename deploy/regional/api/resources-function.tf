@@ -1,5 +1,5 @@
 resource "azurerm_resource_group" "main" {
-  name     = "rg-techtest-${var.environment}"
+  name     = "rg-techtestapi-${var.environment}"
   location = var.azure_location
 }
 
