@@ -12,7 +12,7 @@ resource "azurerm_service_plan" "main" {
 }
 
 resource "azurerm_windows_web_app" "main" {
-  name                = "${var.environment}-techtest-web"
+  name                = "${var.environment}-techtest-api"
   resource_group_name = azurerm_resource_group.main.name
   location            = azurerm_resource_group.main.location
   service_plan_id     = azurerm_service_plan.main.id
@@ -29,7 +29,7 @@ resource "azurerm_windows_web_app" "main" {
     "DOTNET_VERSION"         = "v9.0"
   }
 
-  zip_deploy_file = "techtest-web.zip"
+  zip_deploy_file = "techtest-api.zip"
 }
 
 output "app_service_url" {
