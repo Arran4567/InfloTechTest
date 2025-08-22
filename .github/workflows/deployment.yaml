@@ -53,15 +53,15 @@ jobs:
       
       - name: Set execute permissions
         run: |
-          chmod +x ./scripts/web/build.sh
-          chmod +x ./scripts/web/plan.sh
-          chmod +x ./scripts/web/apply.sh
+          chmod +x ./scripts/api/build.sh
+          chmod +x ./scripts/api/plan.sh
+          chmod +x ./scripts/api/apply.sh
 
       - name: Run npm build
-        run: ./scripts/web/build.sh stage
+        run: ./scripts/api/build.sh stage
 
       - name: Plan API
-        run: ./scripts/web/plan.sh stage
+        run: ./scripts/api/plan.sh stage
 
       - name: Apply API
-        run: ./scripts/web/apply.sh stage
+        run: ./scripts/api/apply.sh stage

@@ -20,7 +20,7 @@ resource "azurerm_service_plan" "main" {
 }
 
 resource "azurerm_windows_function_app" "main" {
-  name                = "${var.environment}-techtest-web"
+  name                = "${var.environment}-techtest-api"
   resource_group_name = azurerm_resource_group.main.name
   location            = azurerm_resource_group.main.location
 
@@ -40,7 +40,7 @@ resource "azurerm_windows_function_app" "main" {
     "ENVIRONMENT"              = var.environment
   }
 
-  zip_deploy_file = "techtest-web.zip"
+  zip_deploy_file = "techtest-api.zip"
 }
 
 output "function_app_url" {
