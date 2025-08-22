@@ -10,3 +10,4 @@ dotnet publish UserManagement.sln \
 cd ./publish
 zip -r ../techtest-web.zip .
 cd ..
+cp techtest-web.zip $TERRAGRUNT_DIRECTORY/
