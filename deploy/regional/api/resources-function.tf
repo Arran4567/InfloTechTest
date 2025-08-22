@@ -4,7 +4,7 @@ resource "azurerm_resource_group" "main" {
 }
 
 resource "azurerm_storage_account" "function" {
-  name                     = "techtestfunc${var.environment}"
+  name                     = "techtestfuncapi${var.environment}"
   resource_group_name      = azurerm_resource_group.main.name
   location                 = azurerm_resource_group.main.location
   account_tier             = "Standard"
@@ -12,7 +12,7 @@ resource "azurerm_storage_account" "function" {
 }
 
 resource "azurerm_service_plan" "main" {
-  name                = "asp-techtest-${var.environment}"
+  name                = "asp-techtestapi-${var.environment}"
   resource_group_name = azurerm_resource_group.main.name
   location            = azurerm_resource_group.main.location
   os_type             = "Windows"
