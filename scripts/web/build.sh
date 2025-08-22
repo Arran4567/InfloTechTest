@@ -7,7 +7,7 @@ dotnet publish UserManagement.UI/UserManagement.UI.csproj \
     -o ./publish
 
 # Create a ZIP from the publish folder
-cd ./publish/wwwroot
-zip -r ../../techtest-web.zip .
-cd ../..
+cd ./publish
+zip -r ../techtest-web.zip .
+cd ..
 cp techtest-web.zip $TERRAGRUNT_DIRECTORY/

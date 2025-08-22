@@ -8,7 +8,7 @@ builder.RootComponents.Add<HeadOutlet>("head::after");
 
 builder.Services.AddScoped(sp => new HttpClient
 {
-    BaseAddress = new Uri("https://localhost:44368/")
+    BaseAddress = new Uri("https://stage-techtest-api.azurewebsites.net/")
 });
 
 
