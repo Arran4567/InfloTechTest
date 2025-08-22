@@ -58,7 +58,7 @@ jobs:
           chmod +x ./scripts/api/apply.sh
           chmod +x ./scripts/web/build.sh
           chmod +x ./scripts/web/plan.sh
-          chmod +x ./scripts/wer/apply.sh
+          chmod +x ./scripts/web/apply.sh
 
       - name: Run API build
         run: ./scripts/api/build.sh stage
