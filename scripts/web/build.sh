@@ -1,5 +1,12 @@
 #!/bin/bash -e
-
 . ./scripts/web/set-env.sh $1
 
-dotnet build UserManagement.sln
+# Publish the function app to a folder
+dotnet publish UserManagement.sln \
+    -c Release \
+    -o ./publish
+
+# Create a ZIP from the publish folder
+cd ./publish
+zip -r ../techtest-web.zip .
+cd ..
