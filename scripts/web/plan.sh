@@ -1,10 +1,13 @@
 #!/bin/bash -e
-. scripts/web/set-env.sh $1
+. ./scripts/web/set-env.sh $1
 
-echo $PLAN_FILE_PATH
-echo $TERRAGRUNT_DIRECTORY
+echo "Setting deployment variables"
+
+cp $PLAN_FILE_PATH $TERRAGRUNT_DIRECTORY
+
+cp techtest-web.zip $TERRAGRUNT_DIRECTORY/
 cd $TERRAGRUNT_DIRECTORY
 ls -l
 
-terragrunt plan -input=false \
-    -out=$PLAN_FILE_PATH
+terragrunt apply -auto-approve \
+    $PLAN_FILE_PATH
