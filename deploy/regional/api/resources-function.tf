@@ -3,14 +3,6 @@ resource "azurerm_resource_group" "main" {
   location = var.azure_location
 }
 
-resource "azurerm_storage_account" "function" {
-  name                     = "techtestfuncapi${var.environment}"
-  resource_group_name      = azurerm_resource_group.main.name
-  location                 = azurerm_resource_group.main.location
-  account_tier             = "Standard"
-  account_replication_type = "LRS"
-}
-
 resource "azurerm_service_plan" "main" {
   name                = "asp-techtestapi-${var.environment}"
   resource_group_name = azurerm_resource_group.main.name
@@ -19,30 +11,27 @@ resource "azurerm_service_plan" "main" {
   sku_name            = "B1"
 }
 
-resource "azurerm_windows_function_app" "main" {
-  name                = "${var.environment}-techtest-api"
+resource "azurerm_windows_web_app" "main" {
+  name                = "${var.environment}-techtest-web"
   resource_group_name = azurerm_resource_group.main.name
   location            = azurerm_resource_group.main.location
-
-  storage_account_name       = azurerm_storage_account.function.name
-  storage_account_access_key = azurerm_storage_account.function.primary_access_key
-  service_plan_id            = azurerm_service_plan.main.id
+  service_plan_id     = azurerm_service_plan.main.id
 
   site_config {
     application_stack {
       dotnet_version = "v9.0"
+      current_stack  = "dotnet"
     }
   }
 
   app_settings = {
-    "DOTNET_VERSION"           = "v9.0"
-    "FUNCTIONS_WORKER_RUNTIME" = "dotnet-isolated"
-    "ENVIRONMENT"              = var.environment
+    "ASPNETCORE_ENVIRONMENT" = var.environment
+    "DOTNET_VERSION"         = "v9.0"
   }
 
-  zip_deploy_file = "techtest-api.zip"
+  zip_deploy_file = "techtest-web.zip"
 }
 
-output "function_app_url" {
-  value = "https://${azurerm_windows_function_app.main.default_hostname}/"
+output "app_service_url" {
+  value = "https://${azurerm_windows_web_app.main.default_hostname}/"
 }
