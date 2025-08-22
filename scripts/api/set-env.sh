@@ -3,9 +3,9 @@
 echo "Setting deployment variables"
 
 export ENVIRONMENT_NAME=$1
-export PROJECT_NAME="techtest"
+export PROJECT_NAME="techtestapi"
 
-export TERRAGRUNT_DIRECTORY="deploy/regional/web"
+export TERRAGRUNT_DIRECTORY="deploy/regional/api"
 export PLAN_FILE_PATH="/tmp/${PROJECT_NAME}.tfplan"
 export ARTIFACTS_DIR="${PWD}/build"
 export TF_VAR_environment_name=${ENVIRONMENT_NAME}

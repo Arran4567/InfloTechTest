@@ -3,7 +3,7 @@
 echo "Setting deployment variables"
 
 export ENVIRONMENT_NAME=$1
-export PROJECT_NAME="techtest"
+export PROJECT_NAME="techtestweb"
 
 export TERRAGRUNT_DIRECTORY="deploy/regional/web"
 export PLAN_FILE_PATH="/tmp/${PROJECT_NAME}.tfplan"

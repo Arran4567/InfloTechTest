@@ -2,7 +2,7 @@
 . ./scripts/api/set-env.sh $1
 
 # Publish the function app to a folder
-dotnet publish UserManagement.sln \
+dotnet publish UserManagement.Api/UserManagement.Api.csproj \
     -c Release \
     -o ./publish
 
